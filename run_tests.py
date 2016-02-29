@@ -26,6 +26,12 @@ element_list.append(runqwalk.QWalkEnergyOptimize(
 element_list.append(runqwalk.QWalkRunVMC(
   submitter=veritas.LocalVeritasQwalkSubmitter(
     nn=1,np=8,time="0:10:00",queue="batch")))
+element_list.append(runqwalk.QWalkRunDMC(
+  submitter=veritas.LocalVeritasQwalkSubmitter(
+    nn=1,np=8,time="0:20:00",queue="batch")))
+element_list.append(runqwalk.QWalkRunPostProcess(
+  submitter=veritas.LocalVeritasQwalkSubmitter(
+    nn=1,np=8,time="0:20:00",queue="batch")))
 
 default_job=jc.default_job_record("si.cif")
 default_job['dft']['kmesh'] = [2,2,2]
@@ -38,7 +44,7 @@ default_job['dft']['edifftol'] = 6
 default_job['dft']['broyden'] = [0.1,60,20]
 default_job['qmc']['variance_optimize']['reltol']=0.1
 default_job['qmc']['variance_optimize']['abstol']=10
-default_job['qmc']['dmc']['save_trace'] = False
+default_job['qmc']['dmc']['save_trace'] = True
 default_job['qmc']['dmc']['nblock']=5
 default_job['qmc']['dmc']['target_error']=0.1
 default_job['total_spin'] = 0
