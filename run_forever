@@ -1,0 +1,2 @@
+#!/bin/bash
+while true; do python run_tests.py ; sleep 1m; done
