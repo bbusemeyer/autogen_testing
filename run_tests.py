@@ -96,8 +96,10 @@ job_record['control']['id']=name
 job_record['supercell'] = [[2,0,0],[0,2,0],[0,0,2]]
 job_record['qmc']['postprocess']['density'] = True
 job_record['qmc']['postprocess']['obdm'] = True
-job_record['qmc']['postprocess']['basis'] = "../super_atomic.basis"
-job_record['qmc']['postprocess']['orb'] = "../super_atomic.orb"
+#job_record['qmc']['postprocess']['basis'] = "../super_atomic.basis"
+job_record['qmc']['postprocess']['basis'] = "../ks.basis"
+#job_record['qmc']['postprocess']['orb'] = "../super_atomic.orb"
+job_record['qmc']['postprocess']['orb'] = "../ks.orb"
 jc.execute(job_record,element_list)
 count+=1
 
