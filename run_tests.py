@@ -5,6 +5,7 @@ import copy
 import job_control as jc
 import os
 import json
+import cryfiles_io as cry
 
 import veritas
 
@@ -62,68 +63,39 @@ job_record['qmc']['postprocess']['obdm'] = True
 job_record['qmc']['postprocess']['density'] = True
 job_record['qmc']['postprocess']['basis'] = "../atomic.basis"
 job_record['qmc']['postprocess']['orb'] = "../atomic.orb"
+job_record['qmc']['postprocess']['lowdin'] = True
+jc.execute(job_record,element_list)
+count+=1
+
+element_list.pop()
+
+# Simple run copying basis.
+name = idbase+"copy"
+job_record = copy.deepcopy(default_job)
+job_record['control']['id']=name
+job_record['dft']['basis'] = \
+    cry.read_cryinp(open("si_ag_simple/autogen.d12",'r'))['basis']
+job_record['qmc']['postprocess']['obdm'] = True
+job_record['qmc']['postprocess']['density'] = True
+job_record['qmc']['postprocess']['basis'] = "../atomic.basis"
+job_record['qmc']['postprocess']['orb'] = "../atomic.orb"
 jc.execute(job_record,element_list)
 count+=1
 
 # Supercell run.
-element_list=[]
-element_list.append(cif2crystal.Cif2Crystal())
-element_list.append(runcrystal.RunCrystal(
-  submitter=veritas.LocalVeritasCrystalSubmitter(
-    nn=1,np=8,time="0:20:00",queue="batch")))
-element_list.append(runcrystal.RunProperties(
-  submitter=veritas.LocalVeritasPropertiesSubmitter(
-    nn=1,np=1,time="1:00:00",queue="batch")))
-element_list.append(runqwalk.Crystal2QWalk())
-element_list.append(runqwalk.QWalkVarianceOptimize(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:00:00",queue="batch")))
-#element_list.append(runqwalk.QWalkEnergyOptimize(
-#  submitter=veritas.LocalVeritasQwalkSubmitter(
-#    nn=1,np=8,time="100:00:00",queue="batch")))
-#element_list.append(runqwalk.QWalkRunVMC(
-#  submitter=veritas.LocalVeritasQwalkSubmitter(
-#    nn=1,np=8,time="100:0:00",queue="batch")))
-element_list.append(runqwalk.QWalkRunDMC(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:00:00",queue="batch")))
-element_list.append(runqwalk.QWalkRunPostProcess(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:00:00",queue="batch")))
 name = idbase+"super"
 job_record = copy.deepcopy(default_job)
 job_record['control']['id']=name
 job_record['supercell'] = [[2,0,0],[0,2,0],[0,0,2]]
 job_record['qmc']['postprocess']['density'] = True
 job_record['qmc']['postprocess']['obdm'] = True
-#job_record['qmc']['postprocess']['basis'] = "../super_atomic.basis"
+job_record['qmc']['postprocess']['basis'] = "../super_atomic.basis"
 job_record['qmc']['postprocess']['basis'] = "../ks.basis"
-#job_record['qmc']['postprocess']['orb'] = "../super_atomic.orb"
+job_record['qmc']['postprocess']['orb'] = "../super_atomic.orb"
 job_record['qmc']['postprocess']['orb'] = "../ks.orb"
 jc.execute(job_record,element_list)
 count+=1
 
-element_list=[]
-element_list.append(cif2crystal.Cif2Crystal())
-element_list.append(runcrystal.RunCrystal(
-  submitter=veritas.LocalVeritasCrystalSubmitter(
-    nn=1,np=8,time="0:20:00",queue="batch")))
-element_list.append(runcrystal.RunProperties(
-  submitter=veritas.LocalVeritasPropertiesSubmitter(
-    nn=1,np=1,time="1:00:00",queue="batch")))
-element_list.append(runqwalk.Crystal2QWalk())
-element_list.append(runqwalk.QWalkVarianceOptimize(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:00:00",queue="batch")))
-element_list.append(runqwalk.QWalkEnergyOptimize(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:00:00",queue="batch")))
-element_list.append(runqwalk.QWalkRunVMC(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:0:00",queue="batch")))
-element_list.append(runqwalk.QWalkRunDMC(
-  submitter=veritas.LocalVeritasQwalkSubmitter(
-    nn=1,np=8,time="100:00:00",queue="batch")))
 # Restart and change something.
 name = idbase+"edit"
 job_record = copy.deepcopy(default_job)
