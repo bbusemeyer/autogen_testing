@@ -63,7 +63,7 @@ job_record['qmc']['postprocess']['obdm'] = True
 job_record['qmc']['postprocess']['density'] = True
 job_record['qmc']['postprocess']['basis'] = "../atomic.basis"
 job_record['qmc']['postprocess']['orb'] = "../atomic.orb"
-job_record['qmc']['postprocess']['lowdin'] = True
+job_record['qmc']['postprocess']['lowden'] = True
 jc.execute(job_record,element_list)
 count+=1
 
@@ -75,7 +75,7 @@ job_record = copy.deepcopy(default_job)
 job_record['control']['id']=name
 job_record['dft']['basis'] = \
     cry.read_cryinp(open("si_ag_simple/autogen.d12",'r'))['basis']
-job_record['qmc']['postprocess']['obdm'] = True
+job_record['qmc']['postprocess']['obkdm'] = True
 job_record['qmc']['postprocess']['density'] = True
 job_record['qmc']['postprocess']['basis'] = "../atomic.basis"
 job_record['qmc']['postprocess']['orb'] = "../atomic.orb"
